@@ -1,50 +1,63 @@
-export interface Suspect {
-  id: string;
+import { Difficulty } from "@/types/investigation";
+
+export interface CaseVictim {
   name: string;
-  relation: string;
-  avatar: string;
-  motive: string;
-  alibi: string;
-  statement: string;
+  age: number;
+  occupation: string;
+  photo: string;
 }
 
-export interface Clue {
+export interface SuspectSecret {
+  fact: string;
+  revealCondition: string;
+}
+
+export interface CaseSuspect {
+  id: string;
+  name: string;
+  age: number;
+  role: string;
+  avatar: string;
+  persona: string;
+  knownFacts: string[];
+  secrets: SuspectSecret[];
+  isKiller?: boolean;
+  crackClueIds: string[];
+  crackBehavior: string;
+}
+
+export interface CaseEvidenceItem {
   id: string;
   title: string;
   description: string;
-  pointsTo: string[];
-  redHerring?: boolean;
+  icon: string;
+  thumbnail: string;
 }
 
-export interface Victim {
-  name: string;
-  occupation: string;
-  causeOfDeath: string;
-  timeOfDeath: string;
-  location: string;
+export interface TimelineEvent {
+  time: string;
+  description: string;
 }
 
-export interface Solution {
+export interface CaseSolution {
   killerId: string;
   explanation: string;
 }
 
-export interface Case {
+export interface CaseDetail {
   id: string;
+  caseNumber: string;
   title: string;
-  victim: Victim;
+  location: string;
+  date: string;
+  difficulty: Difficulty;
+  coverImage: string;
+  victim: CaseVictim;
   briefing: string;
-  suspects: Suspect[];
-  clues: Clue[];
-  solution: Solution;
-}
-
-export interface CaseProgress {
-  caseId: string;
-  introSeen: boolean;
-  readClueIds: string[];
-  viewedSuspectIds: string[];
-  accusedId: string | null;
-  solved: boolean;
-  correct: boolean | null;
+  objective: string;
+  suspects: CaseSuspect[];
+  evidence: CaseEvidenceItem[];
+  timeline: TimelineEvent[];
+  notes: string[];
+  solution: CaseSolution;
 }

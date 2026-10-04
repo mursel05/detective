@@ -1,17 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ai } from "@/lib/gemini";
-import caseData from "@/data/case-001.json";
-import { buildSuspectSystemPrompt, SuspectBrain } from "@/lib/suspect-prompt";
-
-const brains = caseData.suspects as SuspectBrain[];
+import { buildSuspectSystemPrompt } from "@/lib/suspect-prompt";
+import { getInvestigationById, getSuspectById } from "@/data/investigations";
 
 interface HistoryTurn {
   role: "user" | "model";
   text: string;
 }
 
-// Same defensive pattern as the essay evaluator: strip attempts to hijack
-// the suspect's system prompt via the chat input.
 const INJECTION_PATTERNS = [
   /ignore\s+(previous|all|above)\s+instructions?/gi,
   /system\s*:\s*/gi,
@@ -33,25 +29,28 @@ function sanitizePlayerMessage(text: string): string {
   return sanitized.trim();
 }
 
-function findMentionedClueIds(allText: string): string[] {
+function findMentionedClueIds(caseId: string, allText: string): string[] {
+  const caseDetail = getInvestigationById(caseId);
+  if (!caseDetail) return [];
   const lower = allText.toLowerCase();
-  return caseData.clues
+  return caseDetail.evidence
     .filter(
-      (clue) =>
-        lower.includes(clue.id.toLowerCase()) ||
-        lower.includes(clue.title.toLowerCase()),
+      (item) =>
+        lower.includes(item.id.toLowerCase()) ||
+        lower.includes(item.title.toLowerCase()),
     )
-    .map((clue) => clue.id);
+    .map((item) => item.id);
 }
 
 export async function POST(req: NextRequest) {
-  const { suspectId, message, history } = (await req.json()) as {
+  const { caseId, suspectId, message, history } = (await req.json()) as {
+    caseId: string;
     suspectId: string;
     message: string;
     history: HistoryTurn[];
   };
 
-  const brain = brains.find((s) => s.id === suspectId);
+  const brain = getSuspectById(caseId, suspectId);
   if (!brain) {
     return NextResponse.json({ error: "Unknown suspect" }, { status: 400 });
   }
@@ -64,12 +63,11 @@ export async function POST(req: NextRequest) {
   }
 
   const sanitizedMessage = sanitizePlayerMessage(message);
-
   const allPlayerText = [
     ...history.filter((h) => h.role === "user").map((h) => h.text),
     sanitizedMessage,
   ].join(" ");
-  const mentionedClueIds = findMentionedClueIds(allPlayerText);
+  const mentionedClueIds = findMentionedClueIds(caseId, allPlayerText);
 
   const systemPrompt = buildSuspectSystemPrompt(brain, mentionedClueIds);
 
@@ -94,8 +92,7 @@ export async function POST(req: NextRequest) {
       },
     });
     responseText = result.text?.trim() ?? "";
-  } catch (error) {
-    console.error("Error generating suspect response:", error);
+  } catch {
     return NextResponse.json(
       { error: "Suspect is unavailable right now" },
       { status: 502 },

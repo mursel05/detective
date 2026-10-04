@@ -1,4 +1,5 @@
 "use client";
+
 import { useCallback, useEffect, useState } from "react";
 
 export interface ChatMessage {
@@ -7,7 +8,7 @@ export interface ChatMessage {
   mood?: string;
 }
 
-const KEY_PREFIX = "detective:chat:";
+const KEY_PREFIX = "evidence-app:chat:";
 
 export function useSuspectChat(caseId: string, suspectId: string) {
   const storageKey = `${KEY_PREFIX}${caseId}:${suspectId}`;
@@ -48,6 +49,7 @@ export function useSuspectChat(caseId: string, suspectId: string) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            caseId,
             suspectId,
             message: trimmed,
             history: withUserMsg
@@ -70,7 +72,7 @@ export function useSuspectChat(caseId: string, suspectId: string) {
         setPending(false);
       }
     },
-    [messages, persist, suspectId],
+    [messages, persist, caseId, suspectId],
   );
 
   return { messages, send, pending };

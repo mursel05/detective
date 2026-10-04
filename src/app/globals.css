@@ -1,17 +1,67 @@
 @import "tailwindcss";
 
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+.font-heading {
+  font-family: var(--font-cormorant), serif;
+}
+
 :root {
-  --surface: #f4f5f7;
-  --surface-raised: #ffffff;
-  --ink: #12141c;
-  --ink-muted: #5a5f6d;
-  --line: #e1e3e8;
-  --accent: #3454d1;
-  --accent-soft: #eef0fb;
-  --danger: #d64550;
-  --danger-soft: #fbebec;
-  --success: #1f9d6d;
-  --warning: #c98a2c;
-  --radius-sm: 6px;
-  --radius-md: 10px;
+  /* ─────────────────────────────
+     Backgrounds
+     ───────────────────────────── */
+  --bg: #090B0D;
+  --surface: #101315;
+  --surface-raised: #16191B;
+  --surface-hover: #1C2022;
+
+  /* ─────────────────────────────
+     Borders
+     ───────────────────────────── */
+  --border: #292D2F;
+  --border-light: #373B3D;
+
+  /* ─────────────────────────────
+     Typography
+     ───────────────────────────── */
+  --ink: #F1E8D8;
+  --ink-secondary: #D2C7B5;
+  --ink-muted: #8E8A82;
+  --ink-subtle: #625F59;
+
+  /* ─────────────────────────────
+     Primary accent
+     ───────────────────────────── */
+  --accent: #C93432;
+  --accent-hover: #E04440;
+  --accent-soft: rgba(201, 52, 50, 0.14);
+  --accent-border: rgba(201, 52, 50, 0.45);
+
+  /* ─────────────────────────────
+     Difficulty
+     ───────────────────────────── */
+  --easy: #6FA878;
+  --easy-soft: rgba(111, 168, 120, 0.14);
+
+  --medium: #C69A4A;
+  --medium-soft: rgba(198, 154, 74, 0.14);
+
+  --hard: #C93432;
+  --hard-soft: rgba(201, 52, 50, 0.14);
+
+  /* ─────────────────────────────
+     Special / cinematic
+     ───────────────────────────── */
+  --paper: #E5D8C3;
+  --paper-dark: #B9AA94;
+  --gold: #B79A62;
+
+  /* ─────────────────────────────
+     Radius
+     ───────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
 }

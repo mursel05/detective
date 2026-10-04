@@ -1,31 +1,32 @@
 import type { Metadata } from "next";
-import { Special_Elite, Source_Serif_4 } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 
-const specialElite = Special_Elite({
-  weight: "400",
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-special-elite",
+  weight: ["500", "600", "700"],
+  variable: "--font-cormorant",
 });
 
-const sourceSerif = Source_Serif_4({
-  weight: ["400", "600"],
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-source-serif",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
-  title: "Detective Game",
+  title: "The Evidence Never Lies",
   description:
-    "A text-based detective game built with Next.js 13 and Tailwind CSS.",
+    "Solve detective mysteries by investigating suspects and evidence.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html
-      lang="en"
-      className={`${specialElite.variable} ${sourceSerif.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+      <body className="bg-[var(--bg)] text-[var(--ink)]">{children}</body>
     </html>
   );
 }
